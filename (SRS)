@@ -1,0 +1,15 @@
+(SRS)
+Description => This program will include a Linux Server and a Client Portal to encrypt files remotely. Files must be in a .txt fomate.
+Encryption Engine will be a character tumbler with a 10 digit seed.
+Seeds are saved on the server alongside tageted ID'ed Files.
+After Encryption, files sent back will have no key attached so even if stolen, a key can not be parsed out of the file.
+(Version 1)
++ Can handle single requests with given target IP.
+
+Instructions Provided In Later Document 
+
+
+Languages (C++, Bash)
+Protocols (SSH)
+
+
