@@ -1,0 +1,174 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+void Clear_Screen()
+{
+	// If Windows
+    // system("CLS");
+    // If Linux
+    system("clear");
+}
+string IP_Parse(string IP)
+{
+	std::ofstream File;
+	File.open("IP_LIST.txt", ios::app);
+	//std::ofstream A ("IP_LIST.txt");
+	//std::ofstream A;
+	//A.open("IP_LIST.txt");
+	
+	//Write_File.open("IP_List.txt");
+	//getline(Write_File, IP);
+	File << IP << endl;
+	File.close();
+	return "1";
+}
+
+vector<string> List_Parse()
+{
+	vector<string> IP_Hold;
+	std::ifstream Read_File ("IP_LIST.txt");
+	for (std::string line; getline(Read_File, line); )
+	{
+		IP_Hold.push_back(line);
+
+	}
+	Read_File.close();
+	return IP_Hold;
+	
+}
+void IP_Lists()
+{
+	string New_IP = "";
+	string Option = "";
+	vector<string> IP_LIST_FOR_PARSING = List_Parse();
+	while (Option != "Q" && Option != "q")
+	{
+		Clear_Screen();
+		std::cout << "Here Are All OF THE IP's Stored Thus Far!" << std::endl;
+		for (int i = 0; i < IP_LIST_FOR_PARSING.size(); ++i)
+		{
+			std::cout << "[" << i << "]         " << IP_LIST_FOR_PARSING[i] << std::endl;
+		}
+		std::cout << "\n\nBack             [Q]";
+		cin >> Option;
+	}
+}
+
+string IP_List()
+{
+	string New_IP = "";
+	string Option = "";
+	vector<string> IP_LIST_FOR_PARSING = List_Parse();
+	while (Option != "Q" && "q")
+	{
+		Clear_Screen();
+		std::cout << "Choose The Number Relating To your new IP" << std::endl;
+		for (int i = 0; i < IP_LIST_FOR_PARSING.size(); ++i)
+		{
+			std::cout << "[" << i << "]         " << IP_LIST_FOR_PARSING[i] << std::endl;
+		}
+		std::cout << "\n\nBack             [Q]";
+		cin >> Option;
+		if (Option == "q")
+		{
+			return "ERROR";
+		}
+		if (Option == "Q")
+		{
+			return "ERROR";
+		}
+		if (stoi(Option) < IP_LIST_FOR_PARSING.size())
+		{
+			New_IP = IP_LIST_FOR_PARSING[stoi(Option)];
+			return New_IP;
+		}
+		else
+		{
+			Option = "";
+		}
+		return "ERROR";
+	}
+	
+	
+	
+	//while (Option != "1")
+	//{
+	//	Clear_Screen();
+	//	std::fstream File;
+	//	File.open("IP_LIST.txt");
+	//	string Contents;
+	//	File >> Contents;
+	//	std::cout << Contents << std::endl;
+	//	std::cout << "Back       [1]";
+	//	cin >> Option;
+	//	File.close();
+	//}
+	
+}
+string Change_Ip()
+{
+	string Throw = "";
+	string Temp_IP = "";
+	string Option = "";
+	while (Option != "3")
+	{
+		Clear_Screen();
+		std::cout << "What do you want to do?\n\n" << std::endl;
+		std::cout << "Change Current Target IP         [1]" << std::endl;
+		std::cout << "Pick IP From List	         [2]" << std::endl;
+		std::cout << "Back                             [3]" << std::endl;
+		cin >> Option;
+		if (Option == "1")
+		{
+			Clear_Screen();
+			std::cout << "Please Specify The New IP!" << std::endl;
+			cin >> Temp_IP;
+			IP_Parse(Temp_IP);
+		}
+		if (Option == "2")
+		{
+			Throw = IP_List();
+			if (Throw != "ERROR")
+			{
+				Temp_IP = Throw;
+			}
+		}
+		
+	}
+	return Temp_IP;
+}
+void Main_Menu(string True_IP)
+{
+	std::cout << "Welcome to the Client Encryption Portal! Please choose from one of the options below!" << std::endl;
+	//std::cout << "\n\n";
+	std::cout << "Current IP Target =====> [" << True_IP << "]" << std::endl;
+	std::cout << "\n\n" << std::endl;
+	std::cout << "View List Of Stored IP Targets [1]" << std::endl;
+	std::cout << "Change Target IP               [2]"  << std::endl;
+	std::cout << "Quit                           [Q]" << std::endl;
+}
+
+int main()
+{
+	
+	string Option = "0";
+	string True_IP = "NONE!";
+	while (Option != "Q" && Option != "q")
+	{
+		
+		Main_Menu(True_IP);
+		cin >> Option;
+		if (Option == "1")
+		{
+			IP_Lists();
+		}
+		if (Option == "2")
+		{
+			True_IP = Change_Ip();
+		}
+		Clear_Screen();
+	}
+}
