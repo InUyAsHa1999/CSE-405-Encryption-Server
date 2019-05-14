@@ -1,0 +1,579 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+
+void Clear_Screen()
+{
+	// If Windows
+     system("CLS");
+    // If Linux
+    //system("clear");
+}
+string IP_Parse(string IP)
+{
+	std::ofstream File;
+	File.open("IP_LIST.txt", ios::app);
+	File << IP << endl;
+	File.close();
+	return "1";
+}
+
+string UserName_Parse(string UserName)
+{
+	std::ofstream File;
+	File.open("UserName_LIST.txt", ios::app);
+	File << UserName << endl;
+	File.close();
+	return "1";
+}
+void Clear_Request_dxp()
+{
+	std::ofstream File;
+	File.open("Target.cfg", ios::trunc);
+	File << "";
+	File.close();
+}
+void Clear_Request_exp()
+{
+	std::ofstream File;
+	File.open("Target.cfg", ios::trunc);
+	File << "";
+	File.close();
+}
+void Clear_Target_cfg_File()
+{
+	std::ofstream File;
+	File.open("Target.cfg", ios::trunc);
+	File << "";
+	File.close();
+}
+void Clear_Local_cfg_File()
+{
+	std::ofstream File;
+	File.open("Local.cfg", ios::trunc);
+	File << "";
+	File.close();
+}
+void Create_Request_dxp(string &Target_File)
+{
+	Clear_Request_dxp();
+	std::ofstream File;
+	File.open("Request.dxp", ios::app);
+	File << Target_File << endl;
+	File.close();
+
+}
+void Create_Request_exp(string &Target_File)
+{
+	Clear_Request_dxp();
+	std::ofstream File;
+	File.open("Request.exp", ios::app);
+	File << Target_File << endl;
+	File.close();
+}
+void Create_Target_cfg_File(string &T_IP, string &T_UserName, string &T_Password, string &T_Request_Type, string &T_File)
+{
+	string True_Request_Type = "";
+	if (T_Request_Type == "Encrypt")
+	{
+		True_Request_Type = "Request.exp";
+		Create_Request_exp(T_File);
+	}
+	else
+		if (T_Request_Type == "Decrypt")
+		{
+			True_Request_Type = "Request.dxp";
+			Create_Request_dxp(T_File);
+		}
+		else
+			True_Request_Type = "Request.ffe";
+
+	Clear_Target_cfg_File();
+	std::ofstream File;
+	File.open("Target.cfg", ios::app);
+	File << "scp " << T_File << " " << T_UserName << "@" << T_IP << ":~/Public" << endl;
+	File.close();
+}
+void Create_Local_cfg_File(string &L_IP, string &L_UserName, string &L_Password)
+{
+	Clear_Local_cfg_File();
+	std::ofstream File;
+	File.open("Local.cfg", ios::app);
+	File << "scp " << L_UserName << "@" << L_IP << ":~/Public" << endl;
+	File.close();
+}
+vector<string> UserName_List_Parse()
+{
+	vector<string> UserName_Hold;
+	std::ifstream Read_File("UserName_LIST.txt");
+	for (std::string line; getline(Read_File, line); )
+	{
+		UserName_Hold.push_back(line);
+
+	}
+	Read_File.close();
+	return UserName_Hold;
+
+}
+
+vector<string> IP_List_Parse()
+{
+	vector<string> IP_Hold;
+	std::ifstream Read_File ("IP_LIST.txt");
+	for (std::string line; getline(Read_File, line); )
+	{
+		IP_Hold.push_back(line);
+
+	}
+	Read_File.close();
+	return IP_Hold;
+	
+}
+void IP_Lists()
+{
+	string New_IP = "";
+	string Option = "";
+	vector<string> IP_LIST_FOR_PARSING = IP_List_Parse();
+	while (Option != "Q" && Option != "q")
+	{
+		Clear_Screen();
+		std::cout << "Here Are All OF THE IP's Stored Thus Far!" << std::endl;
+		for (int i = 0; i < IP_LIST_FOR_PARSING.size(); ++i)
+		{
+			std::cout << "[" << i << "]         " << IP_LIST_FOR_PARSING[i] << std::endl;
+		}
+		std::cout << "\n\nBack             [Q]";
+		cin >> Option;
+	}
+}
+void IP_Clear()
+{
+	std::ofstream File;
+	File.open("IP_LIST.txt", ios::trunc);
+	File << "";
+	File.close();
+}
+
+void UserName_Clear()
+{
+	std::ofstream File;
+	File.open("UserName_LIST.txt", ios::trunc);
+	File << "";
+	File.close();
+}
+
+string IP_List()
+{
+	string New_IP = "";
+	string Option = "";
+	vector<string> IP_LIST_FOR_PARSING = IP_List_Parse();
+	while (Option != "Q" && "q")
+	{
+		Clear_Screen();
+		std::cout << "Choose The Number Relating To your new IP" << std::endl;
+		for (int i = 0; i < IP_LIST_FOR_PARSING.size(); ++i)
+		{
+			std::cout << "[" << i << "]         " << IP_LIST_FOR_PARSING[i] << std::endl;
+		}
+		std::cout << "\n\nBack             [Q]";
+		cin >> Option;
+		if (Option == "q")
+		{
+			return "ERROR";
+		}
+		if (Option == "Q")
+		{
+			return "ERROR";
+		}
+		if (stoi(Option) < IP_LIST_FOR_PARSING.size())
+		{
+			New_IP = IP_LIST_FOR_PARSING[stoi(Option)];
+			return New_IP;
+		}
+		else
+		{
+			Option = "";
+		}
+		return "ERROR";
+	}
+}
+
+string UserName_List()
+{
+	string New_UserName = "";
+	string Option = "";
+	vector<string> UserName_LIST_FOR_PARSING = UserName_List_Parse();
+	while (Option != "Q" && "q")
+	{
+		Clear_Screen();
+		std::cout << "Choose The Number Relating To your new UserName" << std::endl;
+		for (int i = 0; i < UserName_LIST_FOR_PARSING.size(); ++i)
+		{
+			std::cout << "[" << i << "]         " << UserName_LIST_FOR_PARSING[i] << std::endl;
+		}
+		std::cout << "\n\nBack             [Q]";
+		cin >> Option;
+		if (Option == "q")
+		{
+			return "ERROR";
+		}
+		if (Option == "Q")
+		{
+			return "ERROR";
+		}
+		if (stoi(Option) < UserName_LIST_FOR_PARSING.size())
+		{
+			New_UserName = UserName_LIST_FOR_PARSING[stoi(Option)];
+			return New_UserName;
+		}
+		else
+		{
+			Option = "";
+		}
+		return "ERROR";
+	}
+}
+
+vector<string> Change_UserName()
+{
+	vector<string> UserName_Return;
+	string Throw					= "";
+	string Temp_Local_UserName		= "";
+	string Temp_Target_UserName		= "";
+	string Option = "";
+	while (Option != "6")
+	{
+		Clear_Screen();
+		std::cout << "What do you want to do?\n\n" << std::endl;
+		std::cout << "Change Current UserName		        [Target]       [1]\n"	<< std::endl;
+		std::cout << "Change Current UserName		        [Local]        [2]\n"	<< std::endl;
+		std::cout << "Pick UserName From List                 [Target]       [3]\n" << std::endl;
+		std::cout << "Pick UserName From List                 [Local]        [4]\n" << std::endl;
+		std::cout << "Clear List Of Username's                               [5]\n" << std::endl;
+		std::cout << "Back                                                   [6]\n" << std::endl;
+		cin >> Option;
+		if (Option == "1")
+		{
+			Clear_Screen();
+			std::cout << "Please Specify The New UserName!" << std::endl;
+			cin >> Temp_Target_UserName;
+			UserName_Parse(Temp_Target_UserName);
+		}
+		if (Option == "2")
+		{
+			Clear_Screen();
+			std::cout << "Please Specify The New UserName!" << std::endl;
+			cin >> Temp_Local_UserName;
+			UserName_Parse(Temp_Local_UserName);
+		}
+		if (Option == "3")
+		{
+			Throw = UserName_List();
+			if (Throw != "ERROR")
+			{
+				Temp_Target_UserName = Throw;
+			}
+		}
+		if (Option == "4")
+		{
+			Throw = UserName_List();
+			if (Throw != "ERROR")
+			{
+				Temp_Local_UserName = Throw;
+			}
+		}
+		if (Option == "5")
+		{
+			Clear_Screen();
+			std::cout << "WARNING! BY Continuing, ALL UserNames's WILL BE PERMANENTLY REMOVED. Type <\"YES\"> TO CONTINUE!" << std::endl;
+			string Opt = "";
+			cin >> Opt;
+			if (Opt == "YES")
+			{
+				UserName_Clear();
+			}
+
+		}
+
+	}
+	if (Option == "6")
+	{
+		UserName_Return.push_back(Temp_Local_UserName);
+		UserName_Return.push_back(Temp_Target_UserName);
+		return UserName_Return;
+	}
+}
+
+vector<string> Change_Ip()
+{
+	vector<string> IP_Return;
+	string Throw = "";
+	string Temp_Local_IP = "";
+	string Temp_Target_IP = "";
+	string Option = "";
+	while (Option != "6")
+	{
+		Clear_Screen();
+		std::cout << "What do you want to do?\n\n" << std::endl;
+		std::cout << "Change Current IP	          [Target]       [1]\n"			 << std::endl;
+		std::cout << "Change Current IP	          [Local]        [2]\n"			 << std::endl;
+		std::cout << "Pick IP From List                 [Target]       [3]\n"	 << std::endl;
+		std::cout << "Pick IP From List                 [Local]        [4]\n"	 << std::endl;
+		std::cout << "Clear List Of IP's                               [5]\n"  	 << std::endl;
+		std::cout << "Back                                             [6]\n"	 << std::endl;
+		cin >> Option;
+		if (Option == "1")
+		{
+			Clear_Screen();
+			std::cout << "Please Specify The New IP!" << std::endl;
+			cin >> Temp_Target_IP;
+			IP_Parse(Temp_Target_IP);
+		}
+		if (Option == "2")
+		{
+			Clear_Screen();
+			std::cout << "Please Specify The New IP!" << std::endl;
+			cin >> Temp_Local_IP;
+			IP_Parse(Temp_Local_IP);
+		}
+		if (Option == "3")
+		{
+			Throw = IP_List();
+			if (Throw != "ERROR")
+			{
+				Temp_Target_IP = Throw;
+			}
+		}
+		if (Option == "4")
+		{
+			Throw = IP_List();
+			if (Throw != "ERROR")
+			{
+				Temp_Local_IP = Throw;
+			}
+		}
+		if (Option == "5")
+		{
+			Clear_Screen();
+			std::cout << "WARNING! BY Continuing, ALL IP'S WILL BE PERMANENTLY REMOVED. Type <\"YES\"> TO CONTINUE!" << std::endl;
+			string Opt = "";
+			cin >> Opt;
+			if (Opt == "YES")
+			{
+				IP_Clear();
+			}
+
+		}
+		
+	}
+	if (Option == "6")
+	{
+		IP_Return.push_back(Temp_Local_IP);
+		IP_Return.push_back(Temp_Target_IP);
+		return IP_Return;
+	}
+	
+}
+
+string Change_Target_Password()
+{
+	Clear_Screen();
+	std::cout << "Please Type The New Target Password." << std::endl;
+	string New_Target_Password = "";
+	cin >> New_Target_Password;
+	return New_Target_Password;
+}
+
+string Change_Local_Password()
+{
+	Clear_Screen();
+	std::cout << "Please Type The New Local Password." << std::endl;
+	string New_Local_Password = "";
+	cin >> New_Local_Password;
+	return New_Local_Password;
+}
+
+vector<string> Change_Password()
+{
+	vector<string> Password_Return;
+	string Target_Password = "None";
+	string Local_Password  = "None";
+	string Option = "0";
+	
+	while (Option != "3")
+	{
+		Clear_Screen();
+		std::cout << "If there is a PASSWORD for either the Target or Local systems, please change them here!\n" << std::endl;
+		std::cout << "Change Target Password      ============> [1]\n" << std::endl;
+		std::cout << "Change Local Password       ============> [2]\n" << std::endl;
+		std::cout << "Quit                        ============> [3]\n" << std::endl;
+		cin >> Option;
+		if (Option == "1")
+		{
+			Target_Password = Change_Target_Password();
+		}
+		if (Option == "2")
+		{
+			Local_Password = Change_Local_Password();
+		}
+		if (Option == "3")
+		{
+
+			Password_Return.push_back(Local_Password);
+			Password_Return.push_back(Target_Password);
+			return Password_Return;
+		}
+	}
+	
+}
+
+string Change_Request_Type()
+{
+	string Option = "0";
+	while (Option != "3")
+	{
+		Clear_Screen();
+		std::cout << "What type of request do you want to send to the server?\n" << std::endl;
+		std::cout << "Request to Decrypt      ============> [1]\n"				 << std::endl;
+		std::cout << "Request to Encrypt      ============> [2]\n"				 << std::endl;
+		std::cout << "Quit                    ============> [3]\n"				 << std::endl;
+		cin >> Option;
+		if (Option == "1")
+		{
+			return "Decrypt";
+		}
+		if (Option == "2")
+		{
+			return "Encrypt";
+		}
+		if (Option == "3")
+		{
+			return "None";
+		}
+	}
+}
+void Main_Menu(string Target_IP, string Local_IP, string Target_UserName, string Local_UserName, string D_Target_Password, string D_Local_Password, string Request_Type, string File_Name)
+{
+	std::cout << "Welcome to the Client Encryption Portal! Please choose from one of the options below!" << std::endl;
+	std::cout << "Current Target IP       =====> [" << Target_IP 		 <<	"]"		<<						std::endl;
+	std::cout << "Current Local  IP       =====> [" << Local_IP 	     <<	"]"		<<						std::endl;
+	std::cout << "Current Target UserName =====> [" << Target_UserName	 <<	"]"		<<						std::endl;
+	std::cout << "Current Local UserName  =====> [" << Local_UserName	 <<	"]"		<<						std::endl;
+	std::cout << "Current Target Password =====> [" << D_Target_Password <<	"]"		<<						std::endl;
+	std::cout << "Current Local Password  =====> [" << D_Local_Password	 <<	"]"		<<						std::endl;
+	std::cout << "Request to              =====> [" << Request_Type		 <<	"]"		<<						std::endl;
+	std::cout << "File Name               =====> [" << File_Name	     <<	"]"     <<					    std::endl;
+	std::cout << "\n\n" << std::endl;
+	std::cout << "View List Of Stored IP		 [1]\n"			 << std::endl;
+    std: cout << "View List Of Stored UserNames    [2]\n"		 << std::endl;
+	std::cout << "Change IP                        [3]\n"		 << std::endl;
+	std::cout << "Change UserName                  [4]\n"		 << std::endl;
+	std::cout << "Change Password    	         [5]\n"			 << std::endl;
+	std::cout << "Change Request Type              [6]\n"		 << std::endl;
+	std::cout << "Change File Name                 [7]\n"		 << std::endl;
+  	std::cout << "Quit                             [Q]\n"		 << std::endl;
+}
+
+vector<string> Password_Converter(vector<string> x)
+{
+	vector<string> Return_D_Password;
+	int Number_Of_Dots_0 = x[0].size();
+	int Numver_Of_Dots_1 = x[1].size();
+	string Zero;
+	string One;
+	if (x.size() != 0)
+	{
+		
+		for (int i = 0; i < Number_Of_Dots_0; ++i)
+		{
+			Zero = Zero + "*";
+		}
+		for (int i = 0; i < Numver_Of_Dots_1; ++i)
+		{
+			One = One + "*";
+		}
+		Return_D_Password.push_back(Zero);
+		Return_D_Password.push_back(One);
+		return Return_D_Password;
+	}
+	if (x.size() == 0)
+	{
+		Zero = "None";
+		One  = "None";
+		Return_D_Password.push_back(Zero);
+		Return_D_Password.push_back(One);
+		return Return_D_Password;
+	}
+	
+}
+int main()
+{
+	string Target_IP		 = "None";
+	string Local_IP			 = "None";
+	string Target_UserName	 = "None";
+	string Local_UserName	 = "None";
+	string H_Target_Password = "None";
+	string H_Local_Password  = "None";
+	string D_Target_Password = "None";
+	string D_Local_Password  = "None";
+	string Request_Type      = "None";
+	string File_Name         = "None";
+	string Option			 = "0";
+
+	while (Option != "Q" && Option != "q")
+	{
+		
+		Main_Menu(Target_IP, Local_IP, Target_UserName, Local_UserName, D_Target_Password, D_Local_Password, Request_Type, File_Name);
+		cin >> Option;
+		if (Option == "1")
+		{
+			IP_Lists();
+		}
+		if (Option == "2")
+		{
+			UserName_List();
+		}
+		if (Option == "3")
+		{
+			vector<string> IP_Mark = Change_Ip();
+			Local_IP	 = IP_Mark[0];
+			Target_IP	 = IP_Mark[1];
+		}
+		if (Option == "4")
+		{
+			vector<string> UserName_Mark = Change_UserName();
+			Local_UserName	= UserName_Mark[0];
+			Target_UserName = UserName_Mark[1];
+		}
+		if (Option == "5")
+		{
+			vector<string> Password_Mark = Change_Password();
+			if (Password_Mark.size() == 2)
+			{
+				vector<string> D_Password_Mark = Password_Converter(Password_Mark);
+				H_Local_Password = Password_Mark[0];
+				H_Target_Password = Password_Mark[1];
+				D_Local_Password = D_Password_Mark[0];
+				D_Target_Password = D_Password_Mark[1];
+			}
+			
+		}
+		if (Option == "6")
+		{
+			Request_Type = Change_Request_Type();
+		}
+		if (Option == "7")
+		{
+			Clear_Screen();
+			std::cout << "Please type in new FILE NAME!" << std::endl;
+			cin >> File_Name;
+		}
+		Clear_Screen();
+	}
+	Create_Target_cfg_File(Target_IP, Target_UserName, H_Target_Password, Request_Type, File_Name);
+	Create_Local_cfg_File(Local_IP, Local_UserName, H_Local_Password);
+	return 0;
+}
