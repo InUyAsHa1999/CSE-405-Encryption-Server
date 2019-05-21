@@ -1,0 +1,35 @@
+#!/bin/bash 
+IFS=','
+HomDir="$(pwd)"
+cd $HomDir
+chmod 700 IP_LIST.txt
+chmod 700 Request.exp
+chmod 700 Request.dxp
+chmod 700 UserName_LIST.txt
+mkdir File_Storage
+mkdir Junk
+mkdir IP_Storage
+mkdir Transfer
+chmod 700 IP_Storage
+sudo mv $HomDir/IP_Storage/IP_LIST.txt /$HomDir
+sudo mv $HomDir/UserName_Storage/UserName_LIST.txt /$HomDir
+g++ -std=c++11 ClientPortal.cpp -o Portal
+./Portal
+sudo mv IP_LIST.txt IP_Storage
+sudo mv UserName_LIST.txt UserName_Storage
+sudo mv Local.sh Transfer
+sudo mv Target.sh Transfer
+sudo mv Request.dxp Transfer
+sudo mv Request.exp Transfer
+cd Transfer
+chmod 700 Target.sh
+chmod 700 Local.sh
+find -empty -type f -delete
+./Target.sh
+sleep 1
+rm -r *
+cd ..
+cd File_Storage
+rm -r *
+cd ..
+rm Portal
